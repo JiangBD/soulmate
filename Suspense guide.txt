@@ -1,0 +1,49 @@
+In your root layout.js, wrap {children} in a <Suspense> and give it a full‐screen fallback that simply shows your GIF. For example:
+
+jsx
+Copy
+Edit
+// app/layout.js
+import { Suspense } from "react";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <Suspense
+          fallback={
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                background: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 9999,
+              }}
+            >
+              <img
+                src="/mywaitingscreen.gif"
+                alt="Loading…"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            </div>
+          }
+        >
+          {children}
+        </Suspense>
+      </body>
+    </html>
+  );
+}
+• This fallback <div> is absolutely positioned to cover the entire viewport.
+• The <img> inside is set to fill that space (width: 100%; height: 100%; objectFit: cover).
+• As soon as any child below suspends (e.g. data fetching or a lazy component), you’ll see your GIF full‐screen until it’s ready.
